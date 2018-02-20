@@ -35,6 +35,30 @@ function Adapter(redis_client, prefix){
         return data;
     };
 
+    redis_client.set = (function () {
+        var cached_function = redis_client.set;
+        return function () {
+            if(Array.isArray(arguments[0])){
+                arguments[0][0] = prefix + '-' + arguments[0][0];
+            }else{
+                arguments[0] = prefix + '-' + arguments[0];
+            }
+            return cached_function.apply(this, arguments);
+        }
+    })();
+
+    redis_client.hset = (function () {
+        var cached_function = redis_client.hset;
+        return function () {
+            if(Array.isArray(arguments[0])){
+                arguments[0][0] = prefix + '-' + arguments[0][0];
+            }else{
+                arguments[0] = prefix + '-' + arguments[0];
+            }
+            return cached_function.apply(this, arguments);
+        }
+    })();
+
     redis_client.hmset = (function () {
         var cached_function = redis_client.hmset;
         return function () {
@@ -44,6 +68,52 @@ function Adapter(redis_client, prefix){
                 arguments[0] = prefix + '-' + arguments[0];
             }
             return cached_function.apply(this, arguments);
+        }
+    })();
+
+    redis_client.get = (function () {
+        var cached_function = redis_client.get;
+        return function () {
+            if(Array.isArray(arguments[0])){
+                arguments[0][0] = prefix + '-' + arguments[0][0];
+            }else{
+                arguments[0] = prefix + '-' + arguments[0];
+            }
+            var new_arguments = Array.prototype.slice.call(arguments);
+            for(var i in new_arguments){
+                if(typeof new_arguments[i] === 'function'){
+                    var old = new_arguments[i];
+                    new_arguments[i] = function () {
+                        var args = Array.prototype.slice.call(arguments);
+                        let new_args = replaceNulls(args);
+                        return old.apply(old, new_args);
+                    };
+                }
+            }
+            return cached_function.apply(this, new_arguments);
+        }
+    })();
+
+    redis_client.getAsync = (function () {
+        var cached_function = redis_client.getAsync;
+        return function () {
+            if(Array.isArray(arguments[0])){
+                arguments[0][0] = prefix + '-' + arguments[0][0];
+            }else{
+                arguments[0] = prefix + '-' + arguments[0];
+            }
+            var new_arguments = Array.prototype.slice.call(arguments);
+            for(var i in new_arguments){
+                if(typeof new_arguments[i] === 'function'){
+                    var old = new_arguments[i];
+                    new_arguments[i] = function () {
+                        var args = Array.prototype.slice.call(arguments);
+                        let new_args = replaceNulls(args);
+                        return old.apply(old, new_args);
+                    };
+                }
+            }
+            return cached_function.apply(this, new_arguments);
         }
     })();
 
