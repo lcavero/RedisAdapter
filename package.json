@@ -1,9 +1,8 @@
 {
     "name": "node-redis-adapter",
     "description": "Add extra functionality to the node redis library",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "dependencies": {
-        "redis": ""
     },
     "main": "index.js",
     "repository": {

@@ -13,10 +13,9 @@ Install with:
 You should simply require the adapter by specifying the prefix of the application and letting it do the rest.
 
 ```js
-var redis = require("redis"),
-    client = redis.createClient(),
-    redis_adapter = require("node-redis-adapter")("myapp"); 
-
+var redis = require('redis');
+var redis_client = redis.createClient();
+var redis_adapter = require("node-redis-adapter")(redis_client, "myapp");
 ```
 
 
