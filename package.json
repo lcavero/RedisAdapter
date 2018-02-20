@@ -1,8 +1,23 @@
 {
-    "name": "RedisAdapter",
+    "name": "node-redis-adapter",
+    "description": "Add extra functionality to the node redis library",
     "version": "1.0.0",
     "dependencies": {
         "redis": ""
     },
-    "main": "index.js"
+    "main": "index.js",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/lcavero/RedisAdapter.git"
+    },
+    "author": {
+        "email": "luiscaverodeveloper@gmail.com",
+        "name": "lcavero"
+    },
+    "license": "MIT",
+    "keywords": ["redis", "node", "lcavero"],
+    "bugs": {
+        "url": "https://github.com/lcavero/RedisAdapter/issues"
+    },
+    "homepage": "https://github.com/lcavero/RedisAdapter"
 }

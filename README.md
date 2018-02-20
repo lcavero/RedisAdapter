@@ -1,7 +1,7 @@
 node-redis-adapter
 ==================
 
-This adapter provides some extra functionality for the node redis library
+Add extra functionality to the node redis library.
 
 Install with:
 
