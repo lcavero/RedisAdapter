@@ -140,6 +140,29 @@ function Adapter(redis_client, prefix){
         }
     })();
 
+    redis_client.del = (function () {
+        var cached_function = redis_client.del;
+        return function () {
+            if(Array.isArray(arguments[0])){
+                arguments[0][0] = prefix + '-' + arguments[0][0];
+            }else{
+                arguments[0] = prefix + '-' + arguments[0];
+            }
+            var new_arguments = Array.prototype.slice.call(arguments);
+            for(var i in new_arguments){
+                if(typeof new_arguments[i] === 'function'){
+                    var old = new_arguments[i];
+                    new_arguments[i] = function () {
+                        var args = Array.prototype.slice.call(arguments);
+                        let new_args = replaceNulls(args);
+                        return old.apply(old, new_args);
+                    };
+                }
+            }
+            return cached_function.apply(this, new_arguments);
+        }
+    })();
+
     redis_client.hkeys = (function () {
         var cached_function = redis_client.hkeys;
         return function () {
