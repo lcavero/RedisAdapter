@@ -35,153 +35,26 @@ function Adapter(redis_client, prefix){
         return data;
     };
 
-    redis_client.set = (function () {
-        var cached_function = redis_client.set;
+    redis_client.internal_send_command = (function () {
+        console.log('amigo, amigo')
+        var cached_function = redis_client.internal_send_command;
         return function () {
-            if(Array.isArray(arguments[0])){
-                arguments[0][0] = prefix + '-' + arguments[0][0];
-            }else{
-                arguments[0] = prefix + '-' + arguments[0];
-            }
-            return cached_function.apply(this, arguments);
-        }
-    })();
-
-    redis_client.hset = (function () {
-        var cached_function = redis_client.hset;
-        return function () {
-            if(Array.isArray(arguments[0])){
-                arguments[0][0] = prefix + '-' + arguments[0][0];
-            }else{
-                arguments[0] = prefix + '-' + arguments[0];
-            }
-            return cached_function.apply(this, arguments);
-        }
-    })();
-
-    redis_client.hmset = (function () {
-        var cached_function = redis_client.hmset;
-        return function () {
-            if(Array.isArray(arguments[0])){
-                arguments[0][0] = prefix + '-' + arguments[0][0];
-            }else{
-                arguments[0] = prefix + '-' + arguments[0];
-            }
-            return cached_function.apply(this, arguments);
-        }
-    })();
-
-    redis_client.get = (function () {
-        var cached_function = redis_client.get;
-        return function () {
-            if(Array.isArray(arguments[0])){
-                arguments[0][0] = prefix + '-' + arguments[0][0];
-            }else{
-                arguments[0] = prefix + '-' + arguments[0];
-            }
             var new_arguments = Array.prototype.slice.call(arguments);
-            for(var i in new_arguments){
-                if(typeof new_arguments[i] === 'function'){
-                    var old = new_arguments[i];
-                    new_arguments[i] = function () {
-                        var args = Array.prototype.slice.call(arguments);
-                        let new_args = replaceNulls(args);
-                        return old.apply(old, new_args);
-                    };
-                }
+            var command = new_arguments[0];
+            if(!command.prefixed){
+                command.args[0] = prefix + '-' + command.args[0];
+                command.prefixed = true;
             }
-            return cached_function.apply(this, new_arguments);
-        }
-    })();
 
-    redis_client.getAsync = (function () {
-        var cached_function = redis_client.getAsync;
-        return function () {
-            if(Array.isArray(arguments[0])){
-                arguments[0][0] = prefix + '-' + arguments[0][0];
-            }else{
-                arguments[0] = prefix + '-' + arguments[0];
+            if(command.callback){
+                var old = command.callback;
+                command.callback = function () {
+                    var args = Array.prototype.slice.call(arguments);
+                    let new_args = replaceNulls(args);
+                    return old.apply(old, new_args);
+                };
             }
-            var new_arguments = Array.prototype.slice.call(arguments);
-            for(var i in new_arguments){
-                if(typeof new_arguments[i] === 'function'){
-                    var old = new_arguments[i];
-                    new_arguments[i] = function () {
-                        var args = Array.prototype.slice.call(arguments);
-                        let new_args = replaceNulls(args);
-                        return old.apply(old, new_args);
-                    };
-                }
-            }
-            return cached_function.apply(this, new_arguments);
-        }
-    })();
 
-    redis_client.hgetall = (function () {
-        var cached_function = redis_client.hgetall;
-        return function () {
-            if(Array.isArray(arguments[0])){
-                arguments[0][0] = prefix + '-' + arguments[0][0];
-            }else{
-                arguments[0] = prefix + '-' + arguments[0];
-            }
-            var new_arguments = Array.prototype.slice.call(arguments);
-            for(var i in new_arguments){
-                if(typeof new_arguments[i] === 'function'){
-                    var old = new_arguments[i];
-                    new_arguments[i] = function () {
-                        var args = Array.prototype.slice.call(arguments);
-                        let new_args = replaceNulls(args);
-                        return old.apply(old, new_args);
-                    };
-                }
-            }
-            return cached_function.apply(this, new_arguments);
-        }
-    })();
-
-    redis_client.del = (function () {
-        var cached_function = redis_client.del;
-        return function () {
-            if(Array.isArray(arguments[0])){
-                arguments[0][0] = prefix + '-' + arguments[0][0];
-            }else{
-                arguments[0] = prefix + '-' + arguments[0];
-            }
-            var new_arguments = Array.prototype.slice.call(arguments);
-            for(var i in new_arguments){
-                if(typeof new_arguments[i] === 'function'){
-                    var old = new_arguments[i];
-                    new_arguments[i] = function () {
-                        var args = Array.prototype.slice.call(arguments);
-                        let new_args = replaceNulls(args);
-                        return old.apply(old, new_args);
-                    };
-                }
-            }
-            return cached_function.apply(this, new_arguments);
-        }
-    })();
-
-    redis_client.hkeys = (function () {
-        var cached_function = redis_client.hkeys;
-        return function () {
-            if(Array.isArray(arguments[0])){
-                arguments[0][0] = prefix + '-' + arguments[0][0];
-            }else{
-                arguments[0] = prefix + '-' + arguments[0];
-            }
-            var new_arguments = Array.prototype.slice.call(arguments);
-            for(var i in new_arguments){
-                if(typeof new_arguments[i] === 'function'){
-                    var old = new_arguments[i];
-                    new_arguments[i] = function () {
-                        var args = Array.prototype.slice.call(arguments);
-                        let new_args = replaceNulls(args);
-                        return old.apply(old, new_args);
-                    };
-                }
-            }
             return cached_function.apply(this, new_arguments);
         }
     })();
