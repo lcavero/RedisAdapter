@@ -36,7 +36,6 @@ function Adapter(redis_client, prefix){
     };
 
     redis_client.internal_send_command = (function () {
-        console.log('amigo, amigo')
         var cached_function = redis_client.internal_send_command;
         return function () {
             var new_arguments = Array.prototype.slice.call(arguments);
