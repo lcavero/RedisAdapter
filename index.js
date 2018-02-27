@@ -3,7 +3,7 @@
  */
 module.exports = Adapter;
 
-function Adapter(redis_client, prefix){
+function Adapter(redis_client){
     if(redis_client.constructor.name != 'RedisClient'){
         var type;
 
@@ -16,10 +16,6 @@ function Adapter(redis_client, prefix){
         return;
     }
 
-    if(!prefix){
-        console.warn('You don\'t set a prefix, "df" prefix will be used');
-        prefix = 'df';
-    }
 
     let replaceNulls = function(data) {
         if(typeof data == "object"){
@@ -40,10 +36,6 @@ function Adapter(redis_client, prefix){
         return function () {
             var new_arguments = Array.prototype.slice.call(arguments);
             var command = new_arguments[0];
-            if(!command.prefixed){
-                command.args[0] = prefix + '-' + command.args[0];
-                command.prefixed = true;
-            }
 
             if(command.callback){
                 var old = command.callback;
