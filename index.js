@@ -25,6 +25,10 @@ function Adapter(redis_client){
         }else if(typeof data === 'string'){
             if(data === 'null' || data === 'undefined'){
                 data = null;
+            }else if(data === 'true'){
+                data = true;
+            }else if(data === 'false'){
+                data = false;
             }
         }
 
